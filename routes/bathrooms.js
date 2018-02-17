@@ -13,7 +13,6 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   let b = req.body;
-  console.log(b);
   if(b.coords) {
     let url =
       `${globals.URL.Geocoding}?latlng=${b.coords[0]},${b.coords[1]}&key=${globals.Key.Google.API}`;
@@ -40,8 +39,7 @@ router.post('/', (req, res) => {
         raw += chunk;
       });
       response.on('end', () => {
-        console.log(JSON.parse(raw));
-        createBathroom(JSON.parse(raw)[0]);
+        createBathroom(JSON.parse(raw).results[0]);
       });
     }).on('error', e => {
       error(e, res, "address error");
@@ -50,9 +48,9 @@ router.post('/', (req, res) => {
 
   function createBathroom(location){
     location = Object.assign(location, b.location);
-    console.log(location);
+    console.log("LOCATION", location, "LOCATION");
     let c = location.geometry.location;
-    Bathroom.create({
+    let toSend = {
       location: {
         buildingName: location.buildingName,
         street: location.street,
@@ -60,14 +58,16 @@ router.post('/', (req, res) => {
         state: location.state,
         zip: location.zip,
         formatted: location.formatted_address,
-        coordinates: [c[0], c[1]]
+        coordinates: [c.lat, c.lng]
       },
-      tags: b.tags,
+      tags: b.tags || [],
       geo: {
         type: 'Point',
-        coordinates: [c[1], c[0]]
+        coordinates: [c.lng, c.lat]
       }
-    }, (err, b) => {
+    };
+    console.log(toSend);
+    Bathroom.create(toSend, (err, b) => {
       res.json(b);
     });
   }

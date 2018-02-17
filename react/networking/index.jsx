@@ -20,8 +20,8 @@ module.exports = {
       xhttp.open("POST", url);
       xhttp.setRequestHeader("Content-Type", "application/json");
       xhttp.setRequestHeader("Accept", "application/json");
-      
-      xhttp.send(data);
+
+      xhttp.send(JSON.stringify(data));
     } else {
       callback(null);
     }
