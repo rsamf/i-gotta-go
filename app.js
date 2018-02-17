@@ -5,6 +5,10 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const mongoose = require('mongoose');
+const expressSession = require('express-session');
+
+mongoose.connect('mongodb://samf:123bestsecret123@ds239638.mlab.com:39638/i-gotta-go');
 
 const app = express();
 
@@ -19,6 +23,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(expressSession({
+  secret: '123bestsecret123'
+}));
+
+
 
 // Session And Auth
 
