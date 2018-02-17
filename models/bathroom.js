@@ -40,11 +40,15 @@ const BathroomSchema = new mongoose.Schema({
     activation: Number
   },
   feedbacks: {
-    clean: Number,
-    fancy: Number,
-    nasty: Number,
-    smelly: Number,
-    dontgo: Number
+    positives: {
+      clean: Number,
+      fancy: Number
+    },
+    negatives: {
+      nasty: Number,
+      smelly: Number,
+      dontgo: Number
+    }
   }
 }, {
   timestamps: true
