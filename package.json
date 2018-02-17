@@ -1,0 +1,26 @@
+{
+  "name": "i-gotta-go",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.15.5",
+    "express-session": "^1.15.6",
+    "morgan": "~1.9.0",
+    "passport": "^0.4.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2",
+    "serve-favicon": "~2.4.5",
+    "shortid": "^2.2.8"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.1"
+  }
+}
