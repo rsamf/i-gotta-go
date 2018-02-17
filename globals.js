@@ -43,6 +43,21 @@ module.exports = {
     AllGender: "ALL_GENDER",
     FamilyFriendly: "FAMILY_FRIENDLY"
   },
+  Key: {
+    Google: {
+      API: "AIzaSyDJmWU0PG7G_uCmW5NCEeLSwA0tw1K7ers"
+    }
+  },
+  onError: (err, res, customMessage) => {
+    if(err) {
+      let error = {
+        err: err,
+        msg: customMessage
+      };
+      console.error(error);
+      res.json(error, null);
+    }
+  },
   Validator: Validator,
   BathroomValidator: BathroomValidator
 };
