@@ -10,7 +10,8 @@ const ReviewSchema = new mongoose.Schema({
   upvotes: {
     funny: Number,
     serious: Number,
-    lifeChanging: Number
+    lifeChanging: Number,
+    all: Number
   },
   stall: Number,
   pooped: Boolean,

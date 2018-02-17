@@ -6,8 +6,23 @@ const https = require('https');
 
 router.get('/', (req, res) => {
   error(isNaN(req.query.lat) || isNaN(req.query.lng), res, "Invalid Coordinates");
-  res.json({
-    a: 'todo'
+  let pipeline = Bar.aggregate([{
+    $geoNear : {
+      near : {
+          type : "Point",
+          coordinates : [parseFloat(req.query.lng), parseFloat(req.query.lat)]
+      },
+      distanceField : "dist.calculated",
+      includeLocs : "dist.location",
+      spherical : true
+    }
+  }, {
+    $limit: req.query.limit || 20
+  }]);
+
+  pipeline.exec((err, bathrooms)=>{
+    error(err, res);
+    res.json(bathrooms);
   });
 });
 
@@ -48,7 +63,6 @@ router.post('/', (req, res) => {
 
   function createBathroom(location){
     location = Object.assign(location, b.location);
-    console.log("LOCATION", location, "LOCATION");
     let c = location.geometry.location;
     let toSend = {
       location: {
@@ -68,6 +82,8 @@ router.post('/', (req, res) => {
     };
     console.log(toSend);
     Bathroom.create(toSend, (err, b) => {
+      //add poops to user
+      error(err, res);
       res.json(b);
     });
   }
@@ -80,5 +96,12 @@ router.get('/:id', (req, res) => {
     res.json(bathroom);
   })
 });
+
+router.put('/:id', (req, res) => {
+  Bathroom.findByIdAndUpdate(req.params.id, req.body, (err, bathroom) => {
+    error(err, res);
+    res.json(bathroom);
+  });
+})
 
 module.exports = router;
