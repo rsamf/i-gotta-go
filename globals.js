@@ -4,7 +4,7 @@ class Validator {
   }
 
   isTopNull(T, detail) {
-    if(T )
+    if(!T) return false;
     let keys = Object.keys(T);
     keys.forEach(k => {
       if(!detail[k]) return false;
@@ -38,6 +38,7 @@ class BathroomValidator extends Validator{
     if(_.zip.length !== 5 && !isNaN(parseInt(_.zip))) errors.push("Zip code should be 5 numbers long.");
   }
 }
+
 module.exports = {
   BRTag: {
     AllGender: "ALL_GENDER",
@@ -47,6 +48,9 @@ module.exports = {
     Google: {
       API: "AIzaSyDJmWU0PG7G_uCmW5NCEeLSwA0tw1K7ers"
     }
+  },
+  URL: {
+    Geocoding: "https://maps.googleapis.com/maps/api/geocode/json"
   },
   onError: (err, res, customMessage) => {
     if(err) {

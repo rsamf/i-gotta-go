@@ -14,7 +14,7 @@ class Index extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Home}/>
-          <Route exact path="/404" component={Error404}/>
+          <Route path="*" component={Error404}/>
         </Switch>
       </div>
     );

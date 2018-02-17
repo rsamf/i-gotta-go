@@ -25,8 +25,14 @@ const BathroomSchema = new mongoose.Schema({
     ref: 'review'
   }],
   rating: {
-    value: Number,
-    count: Number
+    value: {
+      type: Number,
+      default: 0
+    },
+    count: {
+      type: Number,
+      default: 0
+    }
   },
   tags: [String],
   geo : {
