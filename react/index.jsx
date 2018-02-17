@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/home.jsx';
+import Bathroom from './components/bathroom/index.jsx';
+import User from './components/user.jsx';
 import Error404 from './components/404.jsx';
 
 class Index extends React.Component {
@@ -14,6 +16,7 @@ class Index extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" component={Home}/>
+          <Route path="/" component={Bathroom}/>
           <Route path="*" component={Error404}/>
         </Switch>
       </div>

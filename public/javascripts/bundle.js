@@ -2337,6 +2337,14 @@ var _home = __webpack_require__(75);
 
 var _home2 = _interopRequireDefault(_home);
 
+var _index = __webpack_require__(79);
+
+var _index2 = _interopRequireDefault(_index);
+
+var _user = __webpack_require__(78);
+
+var _user2 = _interopRequireDefault(_user);
+
 var _ = __webpack_require__(76);
 
 var _2 = _interopRequireDefault(_);
@@ -2368,6 +2376,7 @@ var Index = function (_React$Component) {
           _reactRouterDom.Switch,
           null,
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/', component: _index2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '*', component: _2.default })
         )
       );
@@ -23473,6 +23482,364 @@ var Error404 = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = Error404;
+
+/***/ }),
+/* 77 */,
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bathroom = function (_React$Component) {
+  _inherits(Bathroom, _React$Component);
+
+  function Bathroom(props) {
+    _classCallCheck(this, Bathroom);
+
+    return _possibleConstructorReturn(this, (Bathroom.__proto__ || Object.getPrototypeOf(Bathroom)).call(this, props));
+  }
+
+  _createClass(Bathroom, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        'User'
+      );
+    }
+  }]);
+
+  return Bathroom;
+}(_react2.default.Component);
+
+module.exports = Bathroom;
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouterDom = __webpack_require__(46);
+
+var _add = __webpack_require__(80);
+
+var _add2 = _interopRequireDefault(_add);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bathroom = function (_React$Component) {
+  _inherits(Bathroom, _React$Component);
+
+  function Bathroom(props) {
+    _classCallCheck(this, Bathroom);
+
+    return _possibleConstructorReturn(this, (Bathroom.__proto__ || Object.getPrototypeOf(Bathroom)).call(this, props));
+  }
+
+  _createClass(Bathroom, [{
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        'Bathroom',
+        _react2.default.createElement(_reactRouterDom.Route, { path: '/bathroom/add', component: _add2.default })
+      );
+    }
+  }]);
+
+  return Bathroom;
+}(_react2.default.Component);
+
+module.exports = Bathroom;
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _bathroom = __webpack_require__(81);
+
+var _bathroom2 = _interopRequireDefault(_bathroom);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Bathroom = function (_React$Component) {
+  _inherits(Bathroom, _React$Component);
+
+  function Bathroom(props) {
+    _classCallCheck(this, Bathroom);
+
+    var _this = _possibleConstructorReturn(this, (Bathroom.__proto__ || Object.getPrototypeOf(Bathroom)).call(this, props));
+
+    _this.state = {
+      location: {
+        coordinates: [],
+        street: "",
+        city: "",
+        state: "",
+        zip: "",
+        buildingName: "",
+        locatingDetails: ""
+      }
+    };
+    return _this;
+  }
+
+  _createClass(Bathroom, [{
+    key: 'upForm',
+    value: function upForm(id, evt) {
+      var val = evt.target.value;
+      var location = this.state.location;
+      location[id] = val;
+      this.setState({
+        location: location
+      });
+      console.log(this.state);
+    }
+  }, {
+    key: 'submit',
+    value: function submit() {
+      var _ = this.state.location;
+      var toSend = void 0;
+      if (_.street) {
+        var address = _.street + ', ' + _.city + ', ' + _.state + ' ' + _.zip;
+        toSend = Object.assign(this.state, { address: address });
+      } else if (_.coordinates) {
+        toSend = this.state;
+      }
+      _bathroom2.default.add(toSend, function (err, res) {
+        if (!err) console.log(res);
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        'div',
+        null,
+        _react2.default.createElement(
+          'div',
+          { className: 'row container' },
+          _react2.default.createElement(
+            'div',
+            { className: 'col s3' },
+            _react2.default.createElement(
+              'a',
+              { className: 'btn-floating btn-large waves-effect waves-light red' },
+              _react2.default.createElement(
+                'i',
+                { className: 'material-icons' },
+                'navigation'
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'form',
+            { className: 'col s9' },
+            _react2.default.createElement(
+              'div',
+              { className: 'row' },
+              _react2.default.createElement(
+                'div',
+                { className: 'input-field col s8' },
+                _react2.default.createElement('input', { id: 'street', type: 'text', className: 'validate', onChange: function onChange(e) {
+                    return _this2.upForm("street", e);
+                  } }),
+                _react2.default.createElement(
+                  'label',
+                  { htmlFor: 'street' },
+                  'Street Address'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'input-field col s4' },
+                _react2.default.createElement('input', { id: 'city', type: 'text', className: 'validate', onChange: function onChange(e) {
+                    return _this2.upForm("city", e);
+                  } }),
+                _react2.default.createElement(
+                  'label',
+                  { htmlFor: 'city' },
+                  'City'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'input-field col s8' },
+                _react2.default.createElement('input', { id: 'state', type: 'text', className: 'validate', onChange: function onChange(e) {
+                    return _this2.upForm("state", e);
+                  } }),
+                _react2.default.createElement(
+                  'label',
+                  { htmlFor: 'state' },
+                  'State'
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'input-field col s4' },
+                _react2.default.createElement('input', { id: 'zip', type: 'text', className: 'validate', onChange: function onChange(e) {
+                    return _this2.upForm("zip", e);
+                  } }),
+                _react2.default.createElement(
+                  'label',
+                  { htmlFor: 'zip' },
+                  'Zip Code'
+                )
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'input-field col s12' },
+            _react2.default.createElement('input', { id: 'buildingName', type: 'text', className: 'validate', onChange: function onChange(e) {
+                return _this2.upForm("buildingName", e);
+              } }),
+            _react2.default.createElement(
+              'label',
+              { htmlFor: 'buildingName' },
+              'Building Name'
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'input-field col s12' },
+            _react2.default.createElement('textarea', { id: 'locatingDetails', className: 'materialize-textarea', onChange: function onChange(e) {
+                return _this2.upForm("locatingDetails", e);
+              } }),
+            _react2.default.createElement(
+              'label',
+              { htmlFor: 'locatingDetails' },
+              'Locating Details'
+            )
+          ),
+          _react2.default.createElement(
+            'button',
+            { onClick: function onClick() {
+                return _this2.submit();
+              }, className: 'waves-effect waves-light btn' },
+            'Submit'
+          )
+        )
+      );
+    }
+  }]);
+
+  return Bathroom;
+}(_react2.default.Component);
+
+module.exports = Bathroom;
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _index = __webpack_require__(82);
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  add: function add(data, callback) {
+    return _index2.default.post('/bathrooms', data, callback);
+  },
+  get: function get(id, callback) {
+    return _index2.default.get('/bathrooms/' + id, callback);
+  },
+  search: function search(coords, callback) {
+    return _index2.default.get('/bathrooms?lat=' + coords[0] + '&lng=' + coords[1], callback);
+  }
+};
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+module.exports = {
+  get: function get(url, callback) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState === 4 && xhttp.status === 200) {
+        callback(null, JSON.parse(xhttp.responseText));
+      }
+    };
+    xhttp.open("GET", url);
+    xhttp.send();
+  },
+  post: function post(url, data, callback) {
+    if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+          callback(null, JSON.parse(xhttp.responseText));
+        }
+      };
+      xhttp.open("POST", url);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.setRequestHeader("Accept", "application/json");
+
+      xhttp.send(data);
+    } else {
+      callback(null);
+    }
+  }
+};
 
 /***/ })
 /******/ ]);

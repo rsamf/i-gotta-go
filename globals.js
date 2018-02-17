@@ -59,7 +59,7 @@ module.exports = {
         msg: customMessage
       };
       console.error(error);
-      res.json(error, null);
+      res.json({error: error, res: null});
     }
   },
   Validator: Validator,
