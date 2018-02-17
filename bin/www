@@ -7,6 +7,9 @@
 const app = require('../app');
 // const debug = require('debug')('i-gotta-go:server');
 const http = require('http');
+let globals = require('../globals');
+let Validator = new globals.Validator();
+Validator.verifyBathroom({});
 
 /**
  * Get port from environment and store in Express.

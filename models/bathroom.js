@@ -1,4 +1,5 @@
 const shortid = require('shortid');
+const mongoose = require('mongoose');
 
 const BathroomSchema = new mongoose.Schema({
   _id: {
