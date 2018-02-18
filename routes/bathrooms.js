@@ -65,7 +65,7 @@ router.get('/', (req, res, next) => {
             let toPush = googleBathrooms[listIndex][specIndex];
             // console.log(toPush);
             toPush.verified = false;
-            toReturn.push(toPush);
+            if(noDuplicates(bathrooms, toPush)) toReturn.push(toPush);
           }
         }
         // console.log(toReturn);
@@ -77,7 +77,9 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res) => {
   let b = req.body;
+  console.log("B", b);
   if(b.coords) {
+    console.log(b.coords);
     let url =
       `${globals.URL.Geocoding}?latlng=${b.coords[0]},${b.coords[1]}&key=${globals.Key.Google.API}`;
     https.get(url, response => {
@@ -88,7 +90,7 @@ router.post('/', (req, res) => {
       });
       response.on('end', () => {
         let completed = JSON.parse(raw).results;
-        console.log(completed);
+        console.log(completed[0]);
         createBathroom(completed[0]);
       });
     }).on('error', e => {
@@ -113,8 +115,7 @@ router.post('/', (req, res) => {
   }
 
   function createBathroom(location){
-    console.log(b.location);
-    console.log(b);
+    console.log("id", b.gId);
     console.log(location);
     location = Object.assign(location || {}, b.location);
     let c = location.geometry.location;
@@ -128,6 +129,7 @@ router.post('/', (req, res) => {
         formatted: location.formatted_address,
         coordinates: [c.lat, c.lng]
       },
+      gId: b.gId,
       tags: b.tags || [],
       geo: {
         type: 'Point',
@@ -170,10 +172,26 @@ router.get('/:id/u', (req, res)=> {
 });
 
 router.put('/:id', (req, res) => {
-  Bathroom.findByIdAndUpdate(req.params.id, req.body, (err, bathroom) => {
-    error(err, res);
-    res.json(bathroom);
-  });
+  if(req.query.gender) {
+    Bathroom.findById(req.params.id, (err, bathroom) => {
+      error(err, res);
+      bathroom.allGender = req.query.gender == 'all' ? true : false;
+      bathroom.save();
+    });
+  } else {
+    Bathroom.findByIdAndUpdate(req.params.id, req.body, (err, bathroom) => {
+      error(err, res);
+      res.json(bathroom);
+    });
+  }
+
 })
 
+function noDuplicates(A, ele){
+  console.log("looking at:", ele);
+  for(let i = 0; i < A.length; i++){
+    if(ele.place_id == A[i].gId) return false;
+  }
+  return true;
+}
 module.exports = router;

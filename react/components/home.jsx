@@ -1,5 +1,6 @@
 import React from 'react';
 import networking from '../networking/bathroom.jsx';
+import { Link } from 'react-router-dom';
 
 class Home extends React.Component {
   constructor(props){
@@ -47,10 +48,11 @@ class Home extends React.Component {
             loc = [loc.lat, loc.lng];
             icon = {
               icon: L.mapquest.icons.marker({
-                primaryColor: "#aaaaaa",
-                secondaryColor: "#ffffff",
+                primaryColor: b.allGender ? '#cc22dd' : "#aaaaaa",
+                secondaryColor: b.allGender ? '#cc22dd' : "#ffffff",
                 shadow: true,
-                size: 'lg'
+                size: 'lg',
+                riseOnHover: true
               })
             };
           } else {
@@ -58,9 +60,10 @@ class Home extends React.Component {
             icon = {
               icon: L.mapquest.icons.marker({
                 primaryColor: "#33ff33",
-                secondaryColor: "#aaffaa",
+                secondaryColor: b.allGender ? '#cc22dd' : "#aaffaa",
                 shadow: true,
-                size: 'lg'
+                size: 'lg',
+                riseOnHover: true
               })
             };
           }
@@ -93,7 +96,11 @@ class Home extends React.Component {
             <img className="ui center" src="/images/toilet-loader.gif" alt=""/>
           ) :
           (
+            
             <div id="map-container">
+              <button style={{position:"absolute", zIndex:1000, right: 5}} className="ui button">
+                <Link to="/bathroom/add">Add a Bathroom</Link>
+              </button>
               <div id="map"></div>
             </div>
           )

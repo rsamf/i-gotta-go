@@ -23418,6 +23418,8 @@ var _bathroom = __webpack_require__(78);
 
 var _bathroom2 = _interopRequireDefault(_bathroom);
 
+var _reactRouterDom = __webpack_require__(27);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -23481,10 +23483,11 @@ var Home = function (_React$Component) {
               loc = [loc.lat, loc.lng];
               icon = {
                 icon: L.mapquest.icons.marker({
-                  primaryColor: "#aaaaaa",
-                  secondaryColor: "#ffffff",
+                  primaryColor: b.allGender ? '#cc22dd' : "#aaaaaa",
+                  secondaryColor: b.allGender ? '#cc22dd' : "#ffffff",
                   shadow: true,
-                  size: 'lg'
+                  size: 'lg',
+                  riseOnHover: true
                 })
               };
             } else {
@@ -23492,9 +23495,10 @@ var Home = function (_React$Component) {
               icon = {
                 icon: L.mapquest.icons.marker({
                   primaryColor: "#33ff33",
-                  secondaryColor: "#aaffaa",
+                  secondaryColor: b.allGender ? '#cc22dd' : "#aaffaa",
                   shadow: true,
-                  size: 'lg'
+                  size: 'lg',
+                  riseOnHover: true
                 })
               };
             }
@@ -23525,6 +23529,15 @@ var Home = function (_React$Component) {
         this.state.loading ? _react2.default.createElement('img', { className: 'ui center', src: '/images/toilet-loader.gif', alt: '' }) : _react2.default.createElement(
           'div',
           { id: 'map-container' },
+          _react2.default.createElement(
+            'button',
+            { style: { position: "absolute", zIndex: 1000, right: 5 }, className: 'ui button' },
+            _react2.default.createElement(
+              _reactRouterDom.Link,
+              { to: '/bathroom/add' },
+              'Add a Bathroom'
+            )
+          ),
           _react2.default.createElement('div', { id: 'map' })
         )
       );
@@ -23598,7 +23611,8 @@ var Bathroom = function (_React$Component) {
         review: {
           text: "",
           rating: 0
-        }
+        },
+        all: false
       };
       console.log(s);
       if (s.verified) this.getBathroom(s);else this.getGBathroom(s);
@@ -23611,6 +23625,11 @@ var Bathroom = function (_React$Component) {
       $('.ui.rating').rating();
     }
   }, {
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      $('.ui.checkbox').checkbox();
+    }
+  }, {
     key: 'getGBathroom',
     value: function getGBathroom(state) {
       var self = this;
@@ -23620,6 +23639,7 @@ var Bathroom = function (_React$Component) {
           bathroom: res,
           loading: false
         });
+        self.markMap();
       });
     }
   }, {
@@ -23632,6 +23652,49 @@ var Bathroom = function (_React$Component) {
           bathroom: res,
           loading: false
         });
+        if (res.allGender) $('#allGender').checkbox('set checked');
+        self.markMap();
+      });
+    }
+  }, {
+    key: 'markMap',
+    value: function markMap() {
+      var self = this;
+      navigator.geolocation.getCurrentPosition(function (position) {
+        console.log(position);
+        L.mapquest.key = 'QwMOrkHNGKtPozliUHoqCWalFbaJG8mp';
+        var myPos = [position.coords.latitude, position.coords.longitude];
+        var map = L.mapquest.map('map', {
+          center: myPos,
+          layers: L.mapquest.tileLayer('map'),
+          zoom: 16
+        });
+        //ME
+        L.marker(myPos, {
+          icon: L.mapquest.icons.via({
+            primaryColor: '#47adf8',
+            secondaryColor: '#ffffff',
+            shadow: true,
+            size: 'lg'
+          })
+        }).addTo(map);
+        //BATHROOM
+        var br = self.state.bathroom;
+        var coords = void 0;
+        if (self.state.verified) {
+          coords = br.location.coordinates;
+        } else {
+          var curr = br.geometry.location;
+          coords = [curr.lat, curr.lng];
+        }
+        L.marker(coords, {
+          icon: L.mapquest.icons.marker({
+            primaryColor: self.state.verified ? "#33ff33" : "#aaaaaa",
+            secondaryColor: self.state.verified ? "#aaffaa" : "#ffffff",
+            shadow: true,
+            size: 'lg'
+          })
+        }).addTo(map);
       });
     }
   }, {
@@ -23811,6 +23874,16 @@ var Bathroom = function (_React$Component) {
       $('.ui.rating').rating();
     }
   }, {
+    key: 'allGender',
+    value: function allGender() {
+      var val = $("#allGender").checkbox('is checked');
+      console.log(val);
+      _bathroom2.default.allGender(this.state.id, val, function (res) {
+        //nothing
+        console.log(res);
+      });
+    }
+  }, {
     key: 'renderState',
     value: function renderState() {
       var _this3 = this;
@@ -23872,6 +23945,26 @@ var Bathroom = function (_React$Component) {
                   ),
                   _react2.default.createElement(
                     'div',
+                    { className: 'ui form' },
+                    _react2.default.createElement(
+                      'div',
+                      { className: 'field' },
+                      _react2.default.createElement(
+                        'div',
+                        { id: 'allGender', className: 'ui checkbox toggle', onClick: function onClick() {
+                            return _this3.allGender();
+                          } },
+                        _react2.default.createElement('input', { type: 'checkbox', className: 'hidden' }),
+                        _react2.default.createElement(
+                          'label',
+                          null,
+                          'Is this an All Gender Restroom?'
+                        )
+                      )
+                    )
+                  ),
+                  _react2.default.createElement(
+                    'div',
                     { className: 'ui horizontal divider' },
                     _react2.default.createElement('i', { className: 'location arrow icon' })
                   )
@@ -23887,7 +23980,11 @@ var Bathroom = function (_React$Component) {
                   _react2.default.createElement(
                     'div',
                     { className: 'ui segment' },
-                    'TODO'
+                    _react2.default.createElement(
+                      'div',
+                      { id: 'map-container' },
+                      _react2.default.createElement('div', { id: 'map' })
+                    )
                   )
                 )
               ),
@@ -23960,6 +24057,11 @@ var Bathroom = function (_React$Component) {
                   }, className: 'ui basic button' },
                 'Verify'
               )
+            ),
+            _react2.default.createElement(
+              'div',
+              { id: 'map-container' },
+              _react2.default.createElement('div', { id: 'map' })
             )
           );
         }
@@ -23970,6 +24072,8 @@ var Bathroom = function (_React$Component) {
   }, {
     key: 'verifyCurrent',
     value: function verifyCurrent() {
+      var _this4 = this;
+
       var curr = this.state.bathroom;
       var coords = curr.geometry.location;
       coords = [coords.lat, coords.lng];
@@ -23984,6 +24088,7 @@ var Bathroom = function (_React$Component) {
         });
         console.log("Going to /b/" + bathroom._id);
         self.props.history.push('/b/' + bathroom._id);
+        _this4.markMap();
       });
     }
   }]);
@@ -24035,7 +24140,8 @@ var Bathroom = function (_React$Component) {
         zip: "",
         buildingName: "",
         locatingDetails: ""
-      }
+      },
+      currentMode: false
     };
     return _this;
   }
@@ -24054,16 +24160,40 @@ var Bathroom = function (_React$Component) {
   }, {
     key: 'submit',
     value: function submit() {
-      var _ = this.state.location;
-      var toSend = void 0;
-      if (_.street) {
+
+      if (!this.state.currentMode) {
+        var _ = this.state.location;
+        var toSend = void 0;
         var address = _.street + ', ' + _.city + ', ' + _.state + ' ' + _.zip;
         toSend = Object.assign(this.state, { address: address });
-      } else if (_.coordinates) {
-        toSend = this.state;
+        _bathroom2.default.add(toSend, function (err, res) {
+          if (!err) console.log(res);
+        });
+      } else {
+        this.addFromCurrent();
       }
-      _bathroom2.default.add(toSend, function (err, res) {
-        if (!err) console.log(res);
+    }
+  }, {
+    key: 'currentMode',
+    value: function currentMode() {
+      this.setState({
+        currentMode: true
+      });
+    }
+  }, {
+    key: 'addFromCurrent',
+    value: function addFromCurrent() {
+      var self = this;
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        var coords = [pos.coords.latitude, pos.coords.longitude];
+        _bathroom2.default.add({
+          coords: coords,
+          buildingName: self.state.buildingName,
+          locatingDetails: self.state.locationDetails
+        }, function (res) {
+          console.log(res);
+          self.props.history.push('/');
+        });
       });
     }
   }, {
@@ -24095,73 +24225,75 @@ var Bathroom = function (_React$Component) {
               { className: 'sixteen wide field' },
               _react2.default.createElement(
                 'a',
-                { className: 'ui basic button' },
-                _react2.default.createElement(
-                  'i',
-                  { className: '' },
-                  'navigation'
-                )
+                { onClick: function onClick() {
+                    return _this2.currentMode();
+                  }, className: 'ui icon basic button' },
+                _react2.default.createElement('i', { className: 'location arrow icon' })
               )
             ),
-            _react2.default.createElement(
+            !this.state.currentMode && _react2.default.createElement(
               'div',
-              { className: 'ui horizontal divider' },
-              'Or'
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'ui header' },
-              'Insert Address Manually'
-            ),
-            _react2.default.createElement(
-              'div',
-              { className: 'sixteen wide fields' },
+              null,
               _react2.default.createElement(
                 'div',
-                { className: 'ten wide field' },
-                _react2.default.createElement('input', { id: 'street', type: 'text', onChange: function onChange(e) {
-                    return _this2.upForm("street", e);
-                  } }),
-                _react2.default.createElement(
-                  'label',
-                  { htmlFor: 'street' },
-                  'Street Address'
-                )
+                { className: 'ui horizontal divider' },
+                'Or'
               ),
               _react2.default.createElement(
                 'div',
-                { className: 'six wide field' },
-                _react2.default.createElement('input', { id: 'city', type: 'text', onChange: function onChange(e) {
-                    return _this2.upForm("city", e);
-                  } }),
-                _react2.default.createElement(
-                  'label',
-                  { htmlFor: 'city' },
-                  'City'
-                )
+                { className: 'ui header' },
+                'Insert Address Manually'
               ),
               _react2.default.createElement(
                 'div',
-                { className: 'ten wide field' },
-                _react2.default.createElement('input', { id: 'state', type: 'text', className: 'validate', onChange: function onChange(e) {
-                    return _this2.upForm("state", e);
-                  } }),
+                { className: 'sixteen wide fields' },
                 _react2.default.createElement(
-                  'label',
-                  { htmlFor: 'state' },
-                  'State'
-                )
-              ),
-              _react2.default.createElement(
-                'div',
-                { className: 'six wide field' },
-                _react2.default.createElement('input', { id: 'zip', type: 'text', className: 'validate', onChange: function onChange(e) {
-                    return _this2.upForm("zip", e);
-                  } }),
+                  'div',
+                  { className: 'ten wide field' },
+                  _react2.default.createElement('input', { id: 'street', type: 'text', onChange: function onChange(e) {
+                      return _this2.upForm("street", e);
+                    } }),
+                  _react2.default.createElement(
+                    'label',
+                    { htmlFor: 'street' },
+                    'Street Address'
+                  )
+                ),
                 _react2.default.createElement(
-                  'label',
-                  { htmlFor: 'zip' },
-                  'Zip Code'
+                  'div',
+                  { className: 'six wide field' },
+                  _react2.default.createElement('input', { id: 'city', type: 'text', onChange: function onChange(e) {
+                      return _this2.upForm("city", e);
+                    } }),
+                  _react2.default.createElement(
+                    'label',
+                    { htmlFor: 'city' },
+                    'City'
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'ten wide field' },
+                  _react2.default.createElement('input', { id: 'state', type: 'text', className: 'validate', onChange: function onChange(e) {
+                      return _this2.upForm("state", e);
+                    } }),
+                  _react2.default.createElement(
+                    'label',
+                    { htmlFor: 'state' },
+                    'State'
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'six wide field' },
+                  _react2.default.createElement('input', { id: 'zip', type: 'text', className: 'validate', onChange: function onChange(e) {
+                      return _this2.upForm("zip", e);
+                    } }),
+                  _react2.default.createElement(
+                    'label',
+                    { htmlFor: 'zip' },
+                    'Zip Code'
+                  )
                 )
               )
             )
@@ -24194,7 +24326,7 @@ var Bathroom = function (_React$Component) {
             'button',
             { onClick: function onClick() {
                 return _this2.submit();
-              }, className: 'basic button' },
+              }, className: 'ui blue basic button' },
             'Submit'
           )
         )
@@ -24232,6 +24364,9 @@ module.exports = {
   },
   search: function search(coords, callback) {
     return _index2.default.get('/bathrooms?lat=' + coords[0] + '&lng=' + coords[1], callback);
+  },
+  allGender: function allGender(id, isAll, callback) {
+    return _index2.default.put('/bathrooms/' + id + '?gender=' + (isAll ? 'all' : 'strict'), {}, callback);
   }
 };
 

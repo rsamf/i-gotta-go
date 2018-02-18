@@ -47,6 +47,7 @@ const BathroomSchema = new mongoose.Schema({
     entries: [[Number]],
     activation: Number
   },
+  allGender: Boolean,
   feedbacks: {
     positives: {
       clean: Number,

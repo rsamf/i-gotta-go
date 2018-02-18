@@ -20,7 +20,8 @@ class Bathroom extends React.Component {
       review: {
         text: "",
         rating: 0
-      }
+      },
+      all: false
     };
     console.log(s);
     if(s.verified) this.getBathroom(s);
@@ -31,6 +32,9 @@ class Bathroom extends React.Component {
     $('.ui.modal').modal();
     $('.ui.rating').rating();
   }
+  componentDidUpdate(){
+    $('.ui.checkbox').checkbox();
+  }
   getGBathroom(state){
     let self = this;
     networking.gGet(state.id, res => {
@@ -39,6 +43,7 @@ class Bathroom extends React.Component {
         bathroom: res,
         loading:false
       });
+      self.markMap();
     });
   }
   getBathroom(state){
@@ -49,6 +54,48 @@ class Bathroom extends React.Component {
         bathroom: res,
         loading:false
       });
+      if(res.allGender) $('#allGender').checkbox('set checked');
+      self.markMap();
+    });
+  }
+  markMap(){
+    let self = this;
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log(position);
+      L.mapquest.key = 'QwMOrkHNGKtPozliUHoqCWalFbaJG8mp';
+      let myPos = [position.coords.latitude, position.coords.longitude];
+      let map = L.mapquest.map('map', {
+        center: myPos,
+        layers: L.mapquest.tileLayer('map'),
+        zoom: 16
+      });
+      //ME
+      L.marker(myPos, {
+        icon: L.mapquest.icons.via({
+          primaryColor: '#47adf8',
+          secondaryColor: '#ffffff',
+          shadow: true,
+          size: 'lg'
+        })
+      }).addTo(map);
+      //BATHROOM
+      let br = self.state.bathroom;
+      let coords;
+      if(self.state.verified){
+        coords = br.location.coordinates;
+      } else {
+        let curr = br.geometry.location;
+        coords = [curr.lat, curr.lng];
+      }
+      L.marker(coords, {
+        icon: L.mapquest.icons.marker({
+          primaryColor: self.state.verified ? "#33ff33" : "#aaaaaa",
+          secondaryColor: self.state.verified ? "#aaffaa" : "#ffffff",
+          shadow: true,
+          size: 'lg'
+        })
+      }).addTo(map);
+
     });
   }
 
@@ -147,7 +194,14 @@ class Bathroom extends React.Component {
     $('.ui.checkbox').checkbox();
     $('.ui.rating').rating();
   }
-
+  allGender(){
+    let val = $("#allGender").checkbox('is checked');
+    console.log(val);
+    networking.allGender(this.state.id, val, (res) => {
+      //nothing
+      console.log(res);
+    });
+  }
   renderState(){
     if(this.state.bathroom){
       let b = this.state.bathroom;
@@ -176,11 +230,23 @@ class Bathroom extends React.Component {
                       }
                     </div>
                   </div>
+                  <div className="ui form">
+                      <div className="field">
+                        <div id="allGender" className="ui checkbox toggle" onClick={()=>this.allGender()}>
+                          <input type="checkbox" className="hidden"/>
+                          <label>Is this an All Gender Restroom?</label>
+                        </div>
+                      </div>
+                    </div>
                   <div className="ui horizontal divider"><i className="location arrow icon"></i></div>
                 </div>
                 <div className="sixteen wide column">
                   <div className="ui header">Locator</div>
-                  <div className="ui segment">TODO</div>
+                  <div className="ui segment">
+                    <div id="map-container">
+                      <div id="map"></div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="eight wide column">
@@ -215,6 +281,9 @@ class Bathroom extends React.Component {
               This bathroom is unverified, click here: if you would like to verify it:
               <button onClick={()=>this.verifyCurrent()} className="ui basic button">Verify</button>
             </div>
+            <div id="map-container">
+              <div id="map"></div>
+            </div>
           </div>
         );
       }
@@ -241,7 +310,7 @@ class Bathroom extends React.Component {
       });
       console.log("Going to /b/"+bathroom._id);
       self.props.history.push('/b/'+bathroom._id);
-      
+      this.markMap();
     });
   }
 }
