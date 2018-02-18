@@ -67,10 +67,10 @@ class Bathroom extends React.Component {
     });
   }
   submitReview(){
-    let data = {
-      text: this.state.review.text,
+    let data = Object.assign(this.state.review, {
       rating: $('#rating').rating('get rating')
-    };
+    });
+    console.log(data);
     let self = this;
     revNetworking.post(this.state.id, data, (res) => {
       let bathroom = self.state.bathroom;
@@ -98,12 +98,30 @@ class Bathroom extends React.Component {
               <p>Review</p>
               <input type="text" onChange={(e)=>this.upForm("text", e)}/>
             </div>
-            <div className="field">
-              <p>Rating</p>
-              <div id="rating"
-                className="ui star rating" data-rating="3" data-max-rating="5"
-                onChange={(e)=>this.upForm("rating", e)}
-              />
+            <div className="inline fields">
+              <div className="field">
+                <label style={{color:"white"}}>Rating</label>
+                <div id="rating"
+                  className="ui star rating" data-rating="3" data-max-rating="5"
+                  onChange={(e)=>this.upForm("rating", e)}
+                />
+              </div>
+              <div className="field">
+                <div className="ui checkbox">
+                  <input type="checkbox" className="hidden" onChange={(e)=>this.upForm("wouldRecommend", e)}/>
+                  <label style={{color:"white"}}>Would Recommend</label>
+                </div>
+              </div>
+              <div className="field">
+                <div className="ui checkbox">
+                  <input type="checkbox" className="hidden" onChange={(e)=>this.upForm("pooped", e)}/>
+                  <label style={{color:"white"}}>Did You Poop Here?</label>
+                </div>
+              </div>
+              <div className="field">
+                <label style={{color:"white"}}>Stall #</label>
+                <input type="number" onChange={(e)=>this.upForm("stall", e)}/>
+              </div>
             </div>
           </form>
         </div>
@@ -126,6 +144,8 @@ class Bathroom extends React.Component {
     $('.ui.basic.modal')
       .modal('show')
     ;
+    $('.ui.checkbox').checkbox();
+    $('.ui.rating').rating();
   }
 
   renderState(){
@@ -174,8 +194,10 @@ class Bathroom extends React.Component {
                 
                 <div className="ui segment">
                   {b.reviews.length === 0 ? 
-                    <div>No reviews yet</div> : 
-                    b.reviews.map((r, i)=>this.eachReview(r, i))
+                    <div>No reviews yet</div> :
+                    <div className="ui items divided">
+                      {b.reviews.map((r, i)=>this.eachReview(r, i))}
+                    </div> 
                   }
                 </div>
               </div>

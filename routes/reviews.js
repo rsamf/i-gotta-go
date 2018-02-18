@@ -14,6 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
+  console.log(req.body);
   Review.create(req.body, (err, review) => {
     //add poops to user
     res.json(review);

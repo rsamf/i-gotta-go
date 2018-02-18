@@ -23656,10 +23656,10 @@ var Bathroom = function (_React$Component) {
   }, {
     key: 'submitReview',
     value: function submitReview() {
-      var data = {
-        text: this.state.review.text,
+      var data = Object.assign(this.state.review, {
         rating: $('#rating').rating('get rating')
-      };
+      });
+      console.log(data);
       var self = this;
       _review4.default.post(this.state.id, data, function (res) {
         var bathroom = self.state.bathroom;
@@ -23710,18 +23710,66 @@ var Bathroom = function (_React$Component) {
               ),
               _react2.default.createElement(
                 'div',
-                { className: 'field' },
+                { className: 'inline fields' },
                 _react2.default.createElement(
-                  'p',
-                  null,
-                  'Rating'
+                  'div',
+                  { className: 'field' },
+                  _react2.default.createElement(
+                    'label',
+                    { style: { color: "white" } },
+                    'Rating'
+                  ),
+                  _react2.default.createElement('div', { id: 'rating',
+                    className: 'ui star rating', 'data-rating': '3', 'data-max-rating': '5',
+                    onChange: function onChange(e) {
+                      return _this2.upForm("rating", e);
+                    }
+                  })
                 ),
-                _react2.default.createElement('div', { id: 'rating',
-                  className: 'ui star rating', 'data-rating': '3', 'data-max-rating': '5',
-                  onChange: function onChange(e) {
-                    return _this2.upForm("rating", e);
-                  }
-                })
+                _react2.default.createElement(
+                  'div',
+                  { className: 'field' },
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'ui checkbox' },
+                    _react2.default.createElement('input', { type: 'checkbox', className: 'hidden', onChange: function onChange(e) {
+                        return _this2.upForm("wouldRecommend", e);
+                      } }),
+                    _react2.default.createElement(
+                      'label',
+                      { style: { color: "white" } },
+                      'Would Recommend'
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'field' },
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'ui checkbox' },
+                    _react2.default.createElement('input', { type: 'checkbox', className: 'hidden', onChange: function onChange(e) {
+                        return _this2.upForm("pooped", e);
+                      } }),
+                    _react2.default.createElement(
+                      'label',
+                      { style: { color: "white" } },
+                      'Did You Poop Here?'
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'field' },
+                  _react2.default.createElement(
+                    'label',
+                    { style: { color: "white" } },
+                    'Stall #'
+                  ),
+                  _react2.default.createElement('input', { type: 'number', onChange: function onChange(e) {
+                      return _this2.upForm("stall", e);
+                    } })
+                )
               )
             )
           ),
@@ -23759,6 +23807,8 @@ var Bathroom = function (_React$Component) {
     key: 'makeReview',
     value: function makeReview() {
       $('.ui.basic.modal').modal('show');
+      $('.ui.checkbox').checkbox();
+      $('.ui.rating').rating();
     }
   }, {
     key: 'renderState',
@@ -23872,9 +23922,13 @@ var Bathroom = function (_React$Component) {
                     'div',
                     null,
                     'No reviews yet'
-                  ) : b.reviews.map(function (r, i) {
-                    return _this3.eachReview(r, i);
-                  })
+                  ) : _react2.default.createElement(
+                    'div',
+                    { className: 'ui items divided' },
+                    b.reviews.map(function (r, i) {
+                      return _this3.eachReview(r, i);
+                    })
+                  )
                 )
               )
             )
@@ -24367,47 +24421,75 @@ var Review = function (_React$Component) {
       var up = this.props.children.upvotes;
       return _react2.default.createElement(
         'div',
-        null,
+        { className: 'ui segment' },
         _react2.default.createElement(
-          'p',
-          null,
-          this.props.children.text
-        ),
-        _react2.default.createElement('div', { className: 'ui star rating', 'data-max-rating': '5', 'data-rating': this.props.children.rating }),
-        this.props.children.pooped && _react2.default.createElement(
           'div',
-          { className: 'ui label' },
-          'Has pooped here'
-        ),
-        this.props.children.wouldRecommend && _react2.default.createElement(
-          'div',
-          { className: 'ui label' },
-          'Would Recommend'
-        ),
-        this.props.children.stall && _react2.default.createElement(
-          'div',
-          { className: 'ui label' },
-          'Stall ',
-          this.props.children.stall
-        ),
-        _react2.default.createElement('div', { className: 'ui horizontal divider' }),
-        _react2.default.createElement(
-          'a',
-          { className: 'ui label' },
-          'Funny ',
-          up && up.funny || 0
-        ),
-        _react2.default.createElement(
-          'a',
-          { className: 'ui label' },
-          'Serious ',
-          up && up.serious || 0
-        ),
-        _react2.default.createElement(
-          'a',
-          { className: 'ui label' },
-          'Life-Changing ',
-          up && up.lifeChanging || 0
+          { className: 'item' },
+          _react2.default.createElement(
+            'div',
+            { className: 'content' },
+            _react2.default.createElement(
+              'p',
+              null,
+              this.props.children.text
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'extra ui grid' },
+              _react2.default.createElement(
+                'div',
+                { className: 'three column row' },
+                _react2.default.createElement(
+                  'div',
+                  { className: 'left floated column' },
+                  _react2.default.createElement('div', { className: 'ui star rating', 'data-max-rating': '5', 'data-rating': this.props.children.rating })
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'right floated aligned column' },
+                  this.props.children.pooped && _react2.default.createElement(
+                    'div',
+                    { className: 'ui label' },
+                    'Has pooped here'
+                  ),
+                  this.props.children.wouldRecommend && _react2.default.createElement(
+                    'div',
+                    { className: 'ui label' },
+                    'Would Recommend'
+                  ),
+                  this.props.children.stall && _react2.default.createElement(
+                    'div',
+                    { className: 'ui label' },
+                    'Stall ',
+                    this.props.children.stall
+                  )
+                )
+              )
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'ui horizontal divider' },
+              _react2.default.createElement('i', { className: 'thumbs up outline icon' })
+            ),
+            _react2.default.createElement(
+              'a',
+              { className: 'ui label' },
+              'Funny ',
+              up && up.funny || 0
+            ),
+            _react2.default.createElement(
+              'a',
+              { className: 'ui label' },
+              'Serious ',
+              up && up.serious || 0
+            ),
+            _react2.default.createElement(
+              'a',
+              { className: 'ui label' },
+              'Life-Changing ',
+              up && up.lifeChanging || 0
+            )
+          )
         )
       );
     }
