@@ -15,11 +15,17 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   console.log(req.body);
+  let rating = req.body.rating;
   Review.create(req.body, (err, review) => {
     //add poops to user
     res.json(review);
     Bathroom.findById(req.params.bathroomId, (err, b) => {
       b.reviews.push(review);
+      if(rating){
+        let oldSum = b.rating.value*b.rating.count;
+        let newSum = oldSum + rating;
+        b.rating.value = newSum/(++b.rating.count);
+      }
       b.save();
     });
   });

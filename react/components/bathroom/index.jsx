@@ -167,7 +167,10 @@ class Bathroom extends React.Component {
                       <div className="header">Rating</div>
                       {
                         b.rating && b.rating.count > 0 ?
-                        <div id="main-rating" className="ui rating" data-max-rating="5" data-rating={b.rating.value}></div>
+                        <div>
+                          <div id="main-rating" className="ui rating" data-max-rating="5" data-rating={Math.ceil(b.rating.value)}></div>
+                          ({b.rating.count})
+                        </div>
                         :
                         <div>Not yet Rated</div>
                       }

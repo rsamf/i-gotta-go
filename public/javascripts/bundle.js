@@ -23856,7 +23856,14 @@ var Bathroom = function (_React$Component) {
                         { className: 'header' },
                         'Rating'
                       ),
-                      b.rating && b.rating.count > 0 ? _react2.default.createElement('div', { id: 'main-rating', className: 'ui rating', 'data-max-rating': '5', 'data-rating': b.rating.value }) : _react2.default.createElement(
+                      b.rating && b.rating.count > 0 ? _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement('div', { id: 'main-rating', className: 'ui rating', 'data-max-rating': '5', 'data-rating': Math.ceil(b.rating.value) }),
+                        '(',
+                        b.rating.count,
+                        ')'
+                      ) : _react2.default.createElement(
                         'div',
                         null,
                         'Not yet Rated'
