@@ -15,8 +15,15 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   console.log(req.body);
-  let rating = req.body.rating;
-  Review.create(req.body, (err, review) => {
+  let review = req.body;
+  review.upvotes = {
+    funny: 0,
+    serious: 0,
+    lifeChanging: 0,
+    all: 0
+  };
+  let rating = review.rating;
+  Review.create(review, (err, review) => {
     //add poops to user
     res.json(review);
     Bathroom.findById(req.params.bathroomId, (err, b) => {
@@ -33,22 +40,23 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   Review.findById(req.params.id, (err, review) => {
-    let upvotes = review.upvotes;
     switch(req.query.upvote) {
       case 'funny':
-        upvotes.funny++;
+        review.upvotes.funny++;
         break;
       case 'serious':
-        upvotes.serious++;
+        review.upvotes.serious++;
         break;
       case 'lifeChanging':
-        upvotes.lifeChanging++;
+        review.upvotes.lifeChanging++;
         break;
       default:
         //do nothing
     }
-    review.upvotes.all = upvotes.funny + upvotes.serious + upvotees.lifeChanging;
+    let u = review.upvotes;
+    review.upvotes.all = u.funny + u.serious + u.lifeChanging;
     review.save();
+    console.log(review);
     res.json(review);
   });
 });

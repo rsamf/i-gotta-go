@@ -24397,6 +24397,10 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _review = __webpack_require__(84);
+
+var _review2 = _interopRequireDefault(_review);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24414,6 +24418,12 @@ var Review = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Review.__proto__ || Object.getPrototypeOf(Review)).call(this, props));
 
     console.log(_this.props.children);
+    var up = _this.props.children.upvotes;
+    _this.state = {
+      funny: up && up.funny || 0,
+      serious: up && up.serious || 0,
+      lifeChanging: up && up.lifeChanging || 0
+    };
     return _this;
   }
 
@@ -24423,9 +24433,23 @@ var Review = function (_React$Component) {
       $('.ui.rating').rating('disable');
     }
   }, {
+    key: 'up',
+    value: function up(attr) {
+      var state = this.state;
+      state[attr]++;
+      this.setState(state);
+
+      _review2.default.upvote(this.props.children._id, attr, function (res) {
+        console.log(res);
+        //do nothing
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var up = this.props.children.upvotes;
+      var _this2 = this;
+
+      var votes = this.state;
       return _react2.default.createElement(
         'div',
         { className: 'ui segment' },
@@ -24480,21 +24504,27 @@ var Review = function (_React$Component) {
             ),
             _react2.default.createElement(
               'a',
-              { className: 'ui label' },
+              { onClick: function onClick() {
+                  return _this2.up("funny");
+                }, className: 'ui label' },
               'Funny ',
-              up && up.funny || 0
+              votes.funny || 0
             ),
             _react2.default.createElement(
               'a',
-              { className: 'ui label' },
+              { onClick: function onClick() {
+                  return _this2.up("serious");
+                }, className: 'ui label' },
               'Serious ',
-              up && up.serious || 0
+              votes.serious || 0
             ),
             _react2.default.createElement(
               'a',
-              { className: 'ui label' },
+              { onClick: function onClick() {
+                  return _this2.up("lifeChanging");
+                }, className: 'ui label' },
               'Life-Changing ',
-              up && up.lifeChanging || 0
+              votes.lifeChanging || 0
             )
           )
         )
@@ -24528,7 +24558,7 @@ module.exports = {
     return _index2.default.post('/bathrooms/' + bid + '/reviews', data, callback);
   },
   upvote: function upvote(rid, which, callback) {
-    return _index2.default.put('/bathrooms/UNUSED/' + rid + '?upvote=' + which);
+    return _index2.default.put('/bathrooms/UNUSED/reviews/' + rid + '?upvote=' + which, {}, callback);
   }
 };
 

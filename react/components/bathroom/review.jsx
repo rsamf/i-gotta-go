@@ -1,9 +1,16 @@
 import React from 'react';
+import networking from '../../networking/review.jsx';
 
 class Review extends React.Component {
   constructor(props){
     super(props);
     console.log(this.props.children);
+    let up = this.props.children.upvotes;
+    this.state = {
+      funny: (up && up.funny)|| 0,
+      serious: (up && up.serious) || 0,
+      lifeChanging: (up && up.lifeChanging) || 0
+    };
   }
 
   componentDidMount(){
@@ -11,8 +18,19 @@ class Review extends React.Component {
       .rating('disable')
     ;
   }
+  up(attr){
+    let state = this.state;
+    state[attr]++;
+    this.setState(state);
+
+    networking.upvote(this.props.children._id, attr, (res) => {
+      console.log(res);
+      //do nothing
+    });
+  }
+
   render(){
-    let up = this.props.children.upvotes;
+    let votes = this.state;
     return (
       <div className="ui segment">
         <div className="item">
@@ -34,14 +52,14 @@ class Review extends React.Component {
             
             
             <div className="ui horizontal divider"><i className="thumbs up outline icon"></i></div>
-            <a className="ui label">
-              Funny {(up && up.funny) || 0}
+            <a onClick={()=>this.up("funny")} className="ui label">
+              Funny {votes.funny || 0}
             </a>
-            <a className="ui label">
-              Serious {(up && up.serious) || 0}
+            <a onClick={()=>this.up("serious")} className="ui label">
+              Serious {votes.serious || 0}
             </a>
-            <a className="ui label">
-              Life-Changing {(up && up.lifeChanging) || 0}
+            <a onClick={()=>this.up("lifeChanging")} className="ui label">
+              Life-Changing {votes.lifeChanging || 0}
             </a>
           </div>
         </div>
