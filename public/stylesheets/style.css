@@ -6,3 +6,13 @@ body {
 a {
   color: #00B7FF;
 }
+
+#map-container {
+  width: 100%; 
+  /*height: 100vh;*/
+  height: 100%;
+}
+#map {
+  width: 100%; 
+  height: 100vh;
+}

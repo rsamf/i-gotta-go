@@ -25,7 +25,7 @@ class Index extends React.Component {
 }
 
 document.addEventListener("DOMContentLoaded", ()=>{
-  console.info("justsignin");
+  console.info("i-gotta-go v0.0.1");
   ReactDOM.render(
     <HashRouter> 
       <Index/>

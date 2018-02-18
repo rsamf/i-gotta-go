@@ -50,7 +50,8 @@ module.exports = {
     }
   },
   URL: {
-    Geocoding: "https://maps.googleapis.com/maps/api/geocode/json"
+    Geocoding: "https://maps.googleapis.com/maps/api/geocode/json",
+    Places: "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
   },
   onError: (err, res, customMessage) => {
     if(err) {
@@ -60,6 +61,7 @@ module.exports = {
       };
       console.error(error);
       res.json(error);
+      return true;
     }
   },
   Validator: Validator,

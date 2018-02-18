@@ -44,45 +44,58 @@ class Bathroom extends React.Component {
 
   render(){
     return (
-      <div>
-        <div className="row container">
-          <div className="col s3">
-            <a className="btn-floating btn-large waves-effect waves-light red">
-              <i className="material-icons">navigation</i>
-            </a>
-          </div>
-          <form className="col s9">
-            <div className="row">
-              <div className="input-field col s8">
-                <input id="street" type="text" className="validate" onChange={(e)=>this.upForm("street",e)}/>
+      <div className="ui container">
+        <form className="ui form">
+          <div className="ui dividing header">Verify the Location of a Bathroom</div>
+         
+          <div className="ui segment">
+
+            <div className="ui header">Use Current Location</div>
+            <div className="sixteen wide field">
+
+              <a className="ui basic button">
+                <i className="">navigation</i>
+              </a>
+            </div>
+
+            <div className="ui horizontal divider">
+              Or
+            </div>
+
+            <div className="ui header">Insert Address Manually</div>
+            <div className="sixteen wide fields">
+              <div className="ten wide field">
+                <input id="street" type="text" onChange={(e)=>this.upForm("street",e)}/>
                 <label htmlFor="street">Street Address</label>
               </div>
-              <div className="input-field col s4">
-                <input id="city" type="text" className="validate" onChange={(e)=>this.upForm("city",e)}/>
+              <div className="six wide field">
+                <input id="city" type="text" onChange={(e)=>this.upForm("city",e)}/>
                 <label htmlFor="city">City</label>
               </div>
-              <div className="input-field col s8">
+              <div className="ten wide field">
                 <input id="state" type="text" className="validate" onChange={(e)=>this.upForm("state",e)}/>
                 <label htmlFor="state">State</label>
               </div>
-              <div className="input-field col s4">
+              <div className="six wide field">
                 <input id="zip" type="text" className="validate" onChange={(e)=>this.upForm("zip",e)}/>
                 <label htmlFor="zip">Zip Code</label>
               </div>
             </div>
-          </form>
-          <div className="input-field col s12">
+          </div>
+          <div className="sixteen wide field">
             <input id="buildingName" type="text" className="validate" onChange={(e)=>this.upForm("buildingName",e)}/>
             <label htmlFor="buildingName">Building Name</label>
           </div>
-          <div className="input-field col s12">
+
+          <div className="sixteen wide field">
             <textarea id="locatingDetails" className="materialize-textarea" onChange={(e)=>this.upForm("locatingDetails",e)}>
             </textarea>
             <label htmlFor="locatingDetails">Locating Details</label>
           </div>
-          <button onClick={()=>this.submit()} className="waves-effect waves-light btn">Submit</button>
-        </div>
-      </div>
+
+          <button onClick={()=>this.submit()} className="basic button">Submit</button>
+        </form>
+      </div>      
     );
   }
 }

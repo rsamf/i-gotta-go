@@ -61,4 +61,6 @@ const BathroomSchema = new mongoose.Schema({
   timestamps: true
 });
 
+BathroomSchema.index({geo:'2dsphere'});
+
 module.exports = mongoose.model('bathroom', BathroomSchema);
