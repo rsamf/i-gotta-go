@@ -6,6 +6,7 @@ const BathroomSchema = new mongoose.Schema({
     type: String,
     default: shortid.generate
   },
+  gId: String,
   submittedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'

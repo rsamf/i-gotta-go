@@ -51,7 +51,8 @@ module.exports = {
   },
   URL: {
     Geocoding: "https://maps.googleapis.com/maps/api/geocode/json",
-    Places: "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+    Places: "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+    Place: "https://maps.googleapis.com/maps/api/place/details/json"
   },
   onError: (err, res, customMessage) => {
     if(err) {

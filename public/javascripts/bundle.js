@@ -2400,6 +2400,10 @@ var _index = __webpack_require__(76);
 
 var _index2 = _interopRequireDefault(_index);
 
+var _add = __webpack_require__(77);
+
+var _add2 = _interopRequireDefault(_add);
+
 var _user = __webpack_require__(80);
 
 var _user2 = _interopRequireDefault(_user);
@@ -2435,7 +2439,9 @@ var Index = function (_React$Component) {
           _reactRouterDom.Switch,
           null,
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/', component: _index2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/bathroom/add', component: _add2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/b/*', component: _index2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/ub/*', component: _index2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '*', component: _2.default })
         )
       );
@@ -23440,6 +23446,7 @@ var Home = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      var self = this;
       L.mapquest.key = 'QwMOrkHNGKtPozliUHoqCWalFbaJG8mp';
       navigator.geolocation.getCurrentPosition(function (pos) {
         var myPos = [pos.coords.latitude, pos.coords.longitude];
@@ -23465,7 +23472,6 @@ var Home = function (_React$Component) {
             })
           }).addTo(map);
 
-          console.log(bathrooms.length);
           var bData = [];
           bathrooms.forEach(function (b) {
             var loc = void 0;
@@ -23492,16 +23498,16 @@ var Home = function (_React$Component) {
                 })
               };
             }
-            console.log(loc);
             var marker = L.marker(loc, icon);
             marker.on('click', function (e) {
-              console.log(e);
+              var b = e.target.bathroom;
+              if (b._id) _this2.props.history.push('/b/' + b._id);else _this2.props.history.push('/ub/' + e.target.bathroom.place_id);
             });
             marker.bathroom = b;
+            console.log(b);
             marker.addTo(map);
             bData.push(marker);
           });
-          console.log(bData.length);
 
           _this2.setState({
             map: map,
@@ -23549,6 +23555,10 @@ var _add = __webpack_require__(77);
 
 var _add2 = _interopRequireDefault(_add);
 
+var _review = __webpack_require__(83);
+
+var _review2 = _interopRequireDefault(_review);
+
 var _bathroom = __webpack_require__(78);
 
 var _bathroom2 = _interopRequireDefault(_bathroom);
@@ -23572,22 +23582,49 @@ var Bathroom = function (_React$Component) {
     console.log(_this.props);
     _this.state = {
       id: _this.props.match.params[0],
-      bathroom: {}
+      bathroom: {},
+      loading: true,
+      verified: _this.props.match.path.substring(0, 2) !== '/u'
     };
+    console.log(_this.state.id);
+    console.log(_this.state.verified);
 
-    _this.getBathroom();
+    if (_this.state.verified) _this.getBathroom();else _this.getGBathroom();
     return _this;
   }
 
   _createClass(Bathroom, [{
+    key: 'getGBathroom',
+    value: function getGBathroom() {
+      var self = this;
+      _bathroom2.default.gGet(this.state.id, function (res) {
+        console.log(res);
+        self.setState({
+          bathroom: res,
+          loading: false
+        });
+      });
+    }
+  }, {
     key: 'getBathroom',
     value: function getBathroom() {
       var self = this;
       _bathroom2.default.get(this.state.id, function (res) {
+        console.log(res);
         self.setState({
-          bathroom: res
+          bathroom: res,
+          loading: false
         });
       });
+    }
+  }, {
+    key: 'eachReview',
+    value: function eachReview(i, review) {
+      return _react2.default.createElement(
+        _review2.default,
+        { key: i },
+        review
+      );
     }
   }, {
     key: 'render',
@@ -23595,9 +23632,173 @@ var Bathroom = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         null,
-        this.state.bathroom,
-        _react2.default.createElement(_reactRouterDom.Route, { path: '/bathroom/add', component: _add2.default })
+        this.state.loading ? this.renderLoader() : this.renderState()
       );
+    }
+  }, {
+    key: 'renderLoader',
+    value: function renderLoader() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        'Loading...'
+      );
+    }
+  }, {
+    key: 'renderState',
+    value: function renderState() {
+      var _this2 = this;
+
+      if (this.state.bathroom) {
+        var b = this.state.bathroom;
+        if (this.state.verified) {
+          return _react2.default.createElement(
+            'div',
+            { className: 'ui container' },
+            _react2.default.createElement(
+              'div',
+              { className: 'ui dividing header' },
+              b.location.buildingName || b.location.formatted
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'ui grid' },
+              _react2.default.createElement(
+                'div',
+                { className: 'eight wide column' },
+                _react2.default.createElement(
+                  'div',
+                  { className: 'sixteen wide column' },
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'ui card' },
+                    _react2.default.createElement(
+                      'div',
+                      { className: 'content' },
+                      _react2.default.createElement(
+                        'div',
+                        { className: 'header' },
+                        'Location'
+                      ),
+                      'TODO'
+                    ),
+                    _react2.default.createElement(
+                      'div',
+                      { className: 'content' },
+                      _react2.default.createElement(
+                        'div',
+                        { className: 'header' },
+                        'Rating'
+                      ),
+                      'TODO'
+                    )
+                  ),
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'ui horizontal divider' },
+                    _react2.default.createElement('i', { className: 'location arrow icon' })
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'sixteen wide column' },
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'ui header' },
+                    'Locator'
+                  ),
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'ui segment' },
+                    'TODO'
+                  )
+                )
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'eight wide column' },
+                _react2.default.createElement(
+                  'div',
+                  { className: 'ui grid' },
+                  _react2.default.createElement(
+                    'div',
+                    { className: 'three column row' },
+                    _react2.default.createElement(
+                      'div',
+                      { className: 'left floated column' },
+                      _react2.default.createElement(
+                        'div',
+                        { className: 'ui header' },
+                        'Reviews'
+                      )
+                    ),
+                    _react2.default.createElement(
+                      'div',
+                      { className: 'right floated column' },
+                      _react2.default.createElement(
+                        'div',
+                        { className: 'ui basic button' },
+                        'Add a Review'
+                      )
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  'div',
+                  { className: 'ui segment' },
+                  b.reviews.length === 0 ? _react2.default.createElement(
+                    'div',
+                    null,
+                    'No reviews yet'
+                  ) : b.reviews.map(function (i, r) {
+                    return _this2.eachReview(i, r);
+                  })
+                )
+              )
+            )
+          );
+        } else {
+          return _react2.default.createElement(
+            'div',
+            { className: 'ui container' },
+            _react2.default.createElement(
+              'div',
+              { className: 'ui dividing header' },
+              b.name
+            ),
+            _react2.default.createElement(
+              'div',
+              { className: 'ui text container segment' },
+              'This bathroom is unverified, click here: if you would like to verify it:',
+              _react2.default.createElement(
+                'button',
+                { onClick: function onClick() {
+                    return _this2.verifyCurrent();
+                  }, className: 'ui basic button' },
+                'Verify'
+              )
+            )
+          );
+        }
+      } else {
+        return _react2.default.createElement('div', null);
+      }
+    }
+  }, {
+    key: 'verifyCurrent',
+    value: function verifyCurrent() {
+      var _this3 = this;
+
+      var curr = this.state.bathroom;
+      var coords = curr.geometry.location;
+      coords = [coords.lat, coords.lng];
+      _bathroom2.default.add({ coords: coords, location: { buildingName: curr.name }, gId: curr.place_id }, function (bathroom) {
+        bathroom.verified = true;
+        console.log(bathroom);
+        _this3.setState({
+          bathroom: bathroom
+        });
+      });
     }
   }]);
 
@@ -23840,6 +24041,9 @@ module.exports = {
   get: function get(id, callback) {
     return _index2.default.get('/bathrooms/' + id, callback);
   },
+  gGet: function gGet(id, callback) {
+    return _index2.default.get('/bathrooms/' + id + '/u', callback);
+  },
   search: function search(coords, callback) {
     return _index2.default.get('/bathrooms?lat=' + coords[0] + '&lng=' + coords[1], callback);
   }
@@ -23992,6 +24196,104 @@ var Error404 = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = Error404;
+
+/***/ }),
+/* 82 */,
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Review = function (_React$Component) {
+  _inherits(Review, _React$Component);
+
+  function Review(props) {
+    _classCallCheck(this, Review);
+
+    return _possibleConstructorReturn(this, (Review.__proto__ || Object.getPrototypeOf(Review)).call(this, props));
+  }
+
+  _createClass(Review, [{
+    key: "renderForm",
+    value: function renderForm() {
+      var _this2 = this;
+
+      return _react2.default.createElement(
+        "form",
+        { className: "ui form container" },
+        _react2.default.createElement(
+          "h4",
+          { className: "ui dividing header" },
+          "Submit a Review"
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "field" },
+          _react2.default.createElement(
+            "label",
+            null,
+            "Review"
+          ),
+          _react2.default.createElement("input", { type: "text", name: "", onChange: function onChange(e) {
+              return _this2.upForm("text", e);
+            } })
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "field" },
+          _react2.default.createElement(
+            "label",
+            { htmlFor: "" },
+            "Rating"
+          ),
+          _react2.default.createElement("div", { "class": "ui star rating", "data-rating": "3", onChange: function onChange(e) {
+              return _this2.upForm("rating", e);
+            } })
+        ),
+        _react2.default.createElement(
+          "button",
+          { onClick: function onClick() {
+              return _this2.submit();
+            }, className: "waves-effect waves-light btn" },
+          "Submit"
+        )
+      );
+    }
+  }, {
+    key: "renderReview",
+    value: function renderReview() {
+      return _react2.default.createElement("div", null);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2.default.createElement(
+        "div",
+        null,
+        this.state.created ? renderReview() : renderForm()
+      );
+    }
+  }]);
+
+  return Review;
+}(_react2.default.Component);
+
+module.exports = Review;
 
 /***/ })
 /******/ ]);

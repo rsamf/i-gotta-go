@@ -7,11 +7,12 @@ class Home extends React.Component {
 
     this.state = {
       map: null,
-      loading: true
+      loading: true,
     };
   }
 
   componentDidMount(){
+    let self = this;
     L.mapquest.key = 'QwMOrkHNGKtPozliUHoqCWalFbaJG8mp';
     navigator.geolocation.getCurrentPosition((pos)=>{
       let myPos = [pos.coords.latitude, pos.coords.longitude];
@@ -30,14 +31,13 @@ class Home extends React.Component {
   
         L.marker(myPos, {
           icon: L.mapquest.icons.via({
-              primaryColor: '#47adf8',
-              secondaryColor: '#ffffff',
-              shadow: true,
-              size: 'lg'
+            primaryColor: '#47adf8',
+            secondaryColor: '#ffffff',
+            shadow: true,
+            size: 'lg'
           })
         }).addTo(map);
 
-        console.log(bathrooms.length);
         let bData = [];
         bathrooms.forEach(b => {
           let loc;
@@ -64,16 +64,17 @@ class Home extends React.Component {
               })
             };
           }
-          console.log(loc);
           let marker = L.marker(loc, icon);
           marker.on('click', (e)=>{
-            console.log(e);
+            let b = e.target.bathroom;
+            if(b._id) this.props.history.push('/b/'+b._id);
+            else this.props.history.push('/ub/'+e.target.bathroom.place_id);
           });
           marker.bathroom = b;
+          console.log(b);
           marker.addTo(map);
           bData.push(marker);          
         });
-        console.log(bData.length);
   
         this.setState({
           map: map,

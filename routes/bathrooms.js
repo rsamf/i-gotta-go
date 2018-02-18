@@ -87,7 +87,9 @@ router.post('/', (req, res) => {
         raw += chunk;
       });
       response.on('end', () => {
-        createBathroom(JSON.parse(raw)[0]);
+        let completed = JSON.parse(raw).results;
+        console.log(completed);
+        createBathroom(completed[0]);
       });
     }).on('error', e => {
       error(e, res, "address error");
@@ -111,7 +113,10 @@ router.post('/', (req, res) => {
   }
 
   function createBathroom(location){
-    location = Object.assign(location, b.location);
+    console.log(b.location);
+    console.log(b);
+    console.log(location);
+    location = Object.assign(location || {}, b.location);
     let c = location.geometry.location;
     let toSend = {
       location: {
@@ -143,7 +148,25 @@ router.get('/:id', (req, res) => {
   Bathroom.findById(req.params.id, (err, bathroom) => {
     error(err, res);
     res.json(bathroom);
-  })
+  });
+});
+
+router.get('/:id/u', (req, res)=> {
+  let url = `${globals.URL.Place}?placeid=${req.params.id}&key=${globals.Key.Google.API}`;
+  console.log(url);
+  https.get(url, response => {
+    response.setEncoding('utf8');
+    let raw = "";
+    response.on('data', chunk => {
+      raw += chunk;
+    });
+    response.on('end', () => {
+      console.log(raw);
+      res.json(JSON.parse(raw).result);
+    });
+  }).on('error', e => {
+    error(e, res, "error request place");
+  });
 });
 
 router.put('/:id', (req, res) => {

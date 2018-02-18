@@ -4,14 +4,6 @@ class Review extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      created: false,
-      review: {
-        text: "",
-        rating: 0
-      }
-    };
-
   }
 
   renderForm(){
@@ -20,7 +12,7 @@ class Review extends React.Component {
         <h4 className="ui dividing header">Submit a Review</h4>
         <div className="field">
           <label>Review</label>
-          <input type="text" name="" onChange={(e)=>this.upForm("text", e)}>
+          <input type="text" name="" onChange={(e)=>this.upForm("text", e)}/>
         </div>
         <div className="field">
           <label htmlFor="">Rating</label>
@@ -33,8 +25,7 @@ class Review extends React.Component {
 
   renderReview(){
     return (
-      
-
+      <div></div>
     );
   }
   render(){
