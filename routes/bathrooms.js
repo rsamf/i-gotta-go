@@ -24,6 +24,7 @@ router.get('/', (req, res, next) => {
   }]);
 
   pipeline.exec((err, bathrooms)=>{
+    error(err, bathrooms);
     bathrooms.forEach(b => {
       b.verified = true;
     });

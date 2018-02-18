@@ -115,9 +115,11 @@ class Bathroom extends React.Component {
   }
   submitReview(){
     let data = Object.assign(this.state.review, {
-      rating: $('#rating').rating('get rating')
+      rating: $('#rating').rating('get rating'),
+      wouldRecommend: $('#wouldRecommend').checkbox('is checked'),
+      pooped: $('#pooped').checkbox('is checked')
     });
-    console.log(data);
+    console.log("SENDING",data);
     let self = this;
     revNetworking.post(this.state.id, data, (res) => {
       let bathroom = self.state.bathroom;
@@ -154,14 +156,14 @@ class Bathroom extends React.Component {
                 />
               </div>
               <div className="field">
-                <div className="ui checkbox">
-                  <input type="checkbox" className="hidden" onChange={(e)=>this.upForm("wouldRecommend", e)}/>
+                <div className="ui checkbox" id="wouldRecommend">
+                  <input type="checkbox" className="hidden"/>
                   <label style={{color:"white"}}>Would Recommend</label>
                 </div>
               </div>
               <div className="field">
-                <div className="ui checkbox">
-                  <input type="checkbox" className="hidden" onChange={(e)=>this.upForm("pooped", e)}/>
+                <div className="ui checkbox" id="pooped">
+                  <input type="checkbox" className="hidden"/>
                   <label style={{color:"white"}}>Did You Poop Here?</label>
                 </div>
               </div>

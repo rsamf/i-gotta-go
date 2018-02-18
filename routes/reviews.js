@@ -14,7 +14,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  console.log(req.body);
+  console.log("RECEIVED", req.body);
   let review = req.body;
   review.upvotes = {
     funny: 0,
