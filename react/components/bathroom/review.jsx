@@ -3,35 +3,34 @@ import React from 'react';
 class Review extends React.Component {
   constructor(props){
     super(props);
-
+    console.log(this.props.children);
   }
 
-  renderForm(){
-    return (
-      <form className="ui form container">
-        <h4 className="ui dividing header">Submit a Review</h4>
-        <div className="field">
-          <label>Review</label>
-          <input type="text" name="" onChange={(e)=>this.upForm("text", e)}/>
-        </div>
-        <div className="field">
-          <label htmlFor="">Rating</label>
-          <div class="ui star rating" data-rating="3" onChange={(e)=>this.upForm("rating", e)}/>
-        </div>
-        <button onClick={()=>this.submit()} className="waves-effect waves-light btn">Submit</button>
-      </form>
-    );
-  }
-
-  renderReview(){
-    return (
-      <div></div>
-    );
+  componentDidMount(){
+    $('.ui.rating')
+      .rating('disable')
+    ;
   }
   render(){
+    let up = this.props.children.upvotes;
     return (
       <div>
-        {this.state.created ? renderReview() : renderForm()}
+        <p>{this.props.children.text}</p>
+        <div className="ui star rating" data-max-rating="5" data-rating={this.props.children.rating}></div>
+        {this.props.children.pooped && <div className="ui label">Has pooped here</div>}
+        {this.props.children.wouldRecommend && <div className="ui label">Would Recommend</div>}
+        {this.props.children.stall && <div className="ui label">Stall {this.props.children.stall}</div>}
+        
+        <div className="ui horizontal divider"></div>
+        <a className="ui label">
+          Funny {(up && up.funny) || 0}
+        </a>
+        <a className="ui label">
+          Serious {(up && up.serious) || 0}
+        </a>
+        <a className="ui label">
+          Life-Changing {(up && up.lifeChanging) || 0}
+        </a>
       </div>
     );
   }

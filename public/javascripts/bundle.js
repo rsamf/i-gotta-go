@@ -23563,6 +23563,10 @@ var _bathroom = __webpack_require__(78);
 
 var _bathroom2 = _interopRequireDefault(_bathroom);
 
+var _review3 = __webpack_require__(84);
+
+var _review4 = _interopRequireDefault(_review3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -23579,25 +23583,38 @@ var Bathroom = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (Bathroom.__proto__ || Object.getPrototypeOf(Bathroom)).call(this, props));
 
-    console.log(_this.props);
-    _this.state = {
-      id: _this.props.match.params[0],
-      bathroom: {},
-      loading: true,
-      verified: _this.props.match.path.substring(0, 2) !== '/u'
-    };
-    console.log(_this.state.id);
-    console.log(_this.state.verified);
-
-    if (_this.state.verified) _this.getBathroom();else _this.getGBathroom();
+    _this.state = _this.getState();
     return _this;
   }
 
   _createClass(Bathroom, [{
+    key: 'getState',
+    value: function getState() {
+      var s = {
+        id: this.props.match.params[0],
+        bathroom: {},
+        loading: true,
+        verified: this.props.match.path.substring(0, 2) !== '/u',
+        review: {
+          text: "",
+          rating: 0
+        }
+      };
+      console.log(s);
+      if (s.verified) this.getBathroom(s);else this.getGBathroom(s);
+      return s;
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      $('.ui.modal').modal();
+      $('.ui.rating').rating();
+    }
+  }, {
     key: 'getGBathroom',
-    value: function getGBathroom() {
+    value: function getGBathroom(state) {
       var self = this;
-      _bathroom2.default.gGet(this.state.id, function (res) {
+      _bathroom2.default.gGet(state.id, function (res) {
         console.log(res);
         self.setState({
           bathroom: res,
@@ -23607,9 +23624,9 @@ var Bathroom = function (_React$Component) {
     }
   }, {
     key: 'getBathroom',
-    value: function getBathroom() {
+    value: function getBathroom(state) {
       var self = this;
-      _bathroom2.default.get(this.state.id, function (res) {
+      _bathroom2.default.get(state.id, function (res) {
         console.log(res);
         self.setState({
           bathroom: res,
@@ -23619,7 +23636,7 @@ var Bathroom = function (_React$Component) {
     }
   }, {
     key: 'eachReview',
-    value: function eachReview(i, review) {
+    value: function eachReview(review, i) {
       return _react2.default.createElement(
         _review2.default,
         { key: i },
@@ -23627,12 +23644,106 @@ var Bathroom = function (_React$Component) {
       );
     }
   }, {
+    key: 'upForm',
+    value: function upForm(prop, e) {
+      console.log();
+      var review = this.state.review;
+      review[prop] = e.target.value;
+      this.setState({
+        review: review
+      });
+    }
+  }, {
+    key: 'submitReview',
+    value: function submitReview() {
+      var data = {
+        text: this.state.review.text,
+        rating: $('#rating').rating('get rating')
+      };
+      var self = this;
+      _review4.default.post(this.state.id, data, function (res) {
+        var bathroom = self.state.bathroom;
+        console.log(bathroom);
+        bathroom.reviews.push(res);
+        console.log(bathroom);
+        self.setState({
+          bathroom: bathroom
+        });
+        console.log(res);
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return _react2.default.createElement(
         'div',
         null,
-        this.state.loading ? this.renderLoader() : this.renderState()
+        this.state.loading ? this.renderLoader() : this.renderState(),
+        _react2.default.createElement(
+          'div',
+          { className: 'ui basic modal' },
+          _react2.default.createElement(
+            'div',
+            { className: 'ui icon header' },
+            _react2.default.createElement('i', { className: 'edit icon' }),
+            'Make a Review'
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'content' },
+            _react2.default.createElement(
+              'form',
+              { className: 'ui form' },
+              _react2.default.createElement(
+                'div',
+                { className: 'field' },
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  'Review'
+                ),
+                _react2.default.createElement('input', { type: 'text', onChange: function onChange(e) {
+                    return _this2.upForm("text", e);
+                  } })
+              ),
+              _react2.default.createElement(
+                'div',
+                { className: 'field' },
+                _react2.default.createElement(
+                  'p',
+                  null,
+                  'Rating'
+                ),
+                _react2.default.createElement('div', { id: 'rating',
+                  className: 'ui star rating', 'data-rating': '3', 'data-max-rating': '5',
+                  onChange: function onChange(e) {
+                    return _this2.upForm("rating", e);
+                  }
+                })
+              )
+            )
+          ),
+          _react2.default.createElement(
+            'div',
+            { className: 'actions' },
+            _react2.default.createElement(
+              'div',
+              { className: 'ui red basic cancel inverted button' },
+              _react2.default.createElement('i', { className: 'remove icon' }),
+              ' Cancel'
+            ),
+            _react2.default.createElement(
+              'div',
+              { onClick: function onClick() {
+                  return _this2.submitReview();
+                }, className: 'ui green ok inverted button' },
+              _react2.default.createElement('i', { className: 'checkmark icon' }),
+              ' Submit'
+            )
+          )
+        )
       );
     }
   }, {
@@ -23645,9 +23756,14 @@ var Bathroom = function (_React$Component) {
       );
     }
   }, {
+    key: 'makeReview',
+    value: function makeReview() {
+      $('.ui.basic.modal').modal('show');
+    }
+  }, {
     key: 'renderState',
     value: function renderState() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.state.bathroom) {
         var b = this.state.bathroom;
@@ -23680,7 +23796,7 @@ var Bathroom = function (_React$Component) {
                         { className: 'header' },
                         'Location'
                       ),
-                      'TODO'
+                      b.location.formatted
                     ),
                     _react2.default.createElement(
                       'div',
@@ -23690,7 +23806,11 @@ var Bathroom = function (_React$Component) {
                         { className: 'header' },
                         'Rating'
                       ),
-                      'TODO'
+                      b.rating && b.rating.count > 0 ? _react2.default.createElement('div', { id: 'main-rating', className: 'ui rating', 'data-max-rating': '5', 'data-rating': b.rating.value }) : _react2.default.createElement(
+                        'div',
+                        null,
+                        'Not yet Rated'
+                      )
                     )
                   ),
                   _react2.default.createElement(
@@ -23737,7 +23857,9 @@ var Bathroom = function (_React$Component) {
                       { className: 'right floated column' },
                       _react2.default.createElement(
                         'div',
-                        { className: 'ui basic button' },
+                        { onClick: function onClick() {
+                            return _this3.makeReview();
+                          }, className: 'ui basic button' },
                         'Add a Review'
                       )
                     )
@@ -23750,8 +23872,8 @@ var Bathroom = function (_React$Component) {
                     'div',
                     null,
                     'No reviews yet'
-                  ) : b.reviews.map(function (i, r) {
-                    return _this2.eachReview(i, r);
+                  ) : b.reviews.map(function (r, i) {
+                    return _this3.eachReview(r, i);
                   })
                 )
               )
@@ -23773,7 +23895,7 @@ var Bathroom = function (_React$Component) {
               _react2.default.createElement(
                 'button',
                 { onClick: function onClick() {
-                    return _this2.verifyCurrent();
+                    return _this3.verifyCurrent();
                   }, className: 'ui basic button' },
                 'Verify'
               )
@@ -23787,17 +23909,20 @@ var Bathroom = function (_React$Component) {
   }, {
     key: 'verifyCurrent',
     value: function verifyCurrent() {
-      var _this3 = this;
-
       var curr = this.state.bathroom;
       var coords = curr.geometry.location;
       coords = [coords.lat, coords.lng];
+      var self = this;
       _bathroom2.default.add({ coords: coords, location: { buildingName: curr.name }, gId: curr.place_id }, function (bathroom) {
         bathroom.verified = true;
         console.log(bathroom);
-        _this3.setState({
-          bathroom: bathroom
+        self.setState({
+          bathroom: bathroom,
+          verified: true,
+          id: bathroom._id
         });
+        console.log("Going to /b/" + bathroom._id);
+        self.props.history.push('/b/' + bathroom._id);
       });
     }
   }]);
@@ -24225,67 +24350,65 @@ var Review = function (_React$Component) {
   function Review(props) {
     _classCallCheck(this, Review);
 
-    return _possibleConstructorReturn(this, (Review.__proto__ || Object.getPrototypeOf(Review)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Review.__proto__ || Object.getPrototypeOf(Review)).call(this, props));
+
+    console.log(_this.props.children);
+    return _this;
   }
 
   _createClass(Review, [{
-    key: "renderForm",
-    value: function renderForm() {
-      var _this2 = this;
-
-      return _react2.default.createElement(
-        "form",
-        { className: "ui form container" },
-        _react2.default.createElement(
-          "h4",
-          { className: "ui dividing header" },
-          "Submit a Review"
-        ),
-        _react2.default.createElement(
-          "div",
-          { className: "field" },
-          _react2.default.createElement(
-            "label",
-            null,
-            "Review"
-          ),
-          _react2.default.createElement("input", { type: "text", name: "", onChange: function onChange(e) {
-              return _this2.upForm("text", e);
-            } })
-        ),
-        _react2.default.createElement(
-          "div",
-          { className: "field" },
-          _react2.default.createElement(
-            "label",
-            { htmlFor: "" },
-            "Rating"
-          ),
-          _react2.default.createElement("div", { "class": "ui star rating", "data-rating": "3", onChange: function onChange(e) {
-              return _this2.upForm("rating", e);
-            } })
-        ),
-        _react2.default.createElement(
-          "button",
-          { onClick: function onClick() {
-              return _this2.submit();
-            }, className: "waves-effect waves-light btn" },
-          "Submit"
-        )
-      );
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      $('.ui.rating').rating('disable');
     }
   }, {
-    key: "renderReview",
-    value: function renderReview() {
-      return _react2.default.createElement("div", null);
-    }
-  }, {
-    key: "render",
+    key: 'render',
     value: function render() {
+      var up = this.props.children.upvotes;
       return _react2.default.createElement(
-        "div",
+        'div',
         null,
-        this.state.created ? renderReview() : renderForm()
+        _react2.default.createElement(
+          'p',
+          null,
+          this.props.children.text
+        ),
+        _react2.default.createElement('div', { className: 'ui star rating', 'data-max-rating': '5', 'data-rating': this.props.children.rating }),
+        this.props.children.pooped && _react2.default.createElement(
+          'div',
+          { className: 'ui label' },
+          'Has pooped here'
+        ),
+        this.props.children.wouldRecommend && _react2.default.createElement(
+          'div',
+          { className: 'ui label' },
+          'Would Recommend'
+        ),
+        this.props.children.stall && _react2.default.createElement(
+          'div',
+          { className: 'ui label' },
+          'Stall ',
+          this.props.children.stall
+        ),
+        _react2.default.createElement('div', { className: 'ui horizontal divider' }),
+        _react2.default.createElement(
+          'a',
+          { className: 'ui label' },
+          'Funny ',
+          up && up.funny || 0
+        ),
+        _react2.default.createElement(
+          'a',
+          { className: 'ui label' },
+          'Serious ',
+          up && up.serious || 0
+        ),
+        _react2.default.createElement(
+          'a',
+          { className: 'ui label' },
+          'Life-Changing ',
+          up && up.lifeChanging || 0
+        )
       );
     }
   }]);
@@ -24294,6 +24417,31 @@ var Review = function (_React$Component) {
 }(_react2.default.Component);
 
 module.exports = Review;
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _index = __webpack_require__(79);
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = {
+  get: function get(bid, callback) {
+    return _index2.default.get('/bathrooms/' + bid + '/reviews', callback);
+  },
+  post: function post(bid, data, callback) {
+    return _index2.default.post('/bathrooms/' + bid + '/reviews', data, callback);
+  },
+  upvote: function upvote(rid, which, callback) {
+    return _index2.default.put('/bathrooms/UNUSED/' + rid + '?upvote=' + which);
+  }
+};
 
 /***/ })
 /******/ ]);

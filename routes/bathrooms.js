@@ -145,7 +145,7 @@ router.post('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  Bathroom.findById(req.params.id, (err, bathroom) => {
+  Bathroom.findById(req.params.id).populate('reviews').exec((err, bathroom) => {
     error(err, res);
     res.json(bathroom);
   });

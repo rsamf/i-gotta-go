@@ -3,27 +3,37 @@ import {Route} from 'react-router-dom';
 import Add from './add.jsx';
 import Review from './review.jsx';
 import networking from '../../networking/bathroom.jsx';
+import revNetworking from '../../networking/review.jsx';
 
 class Bathroom extends React.Component {
   constructor(props){
     super(props);
 
-    console.log(this.props);
-    this.state = {
+    this.state = this.getState();
+  }
+  getState(){
+    let s = {
       id: this.props.match.params[0],
       bathroom: {},
       loading: true,
-      verified: this.props.match.path.substring(0, 2) !== '/u'
+      verified: this.props.match.path.substring(0, 2) !== '/u',
+      review: {
+        text: "",
+        rating: 0
+      }
     };
-    console.log(this.state.id);
-    console.log(this.state.verified);
-
-    if(this.state.verified) this.getBathroom();
-    else this.getGBathroom();
+    console.log(s);
+    if(s.verified) this.getBathroom(s);
+    else this.getGBathroom(s);
+    return s;
   }
-  getGBathroom(){
+  componentDidMount(){
+    $('.ui.modal').modal();
+    $('.ui.rating').rating();
+  }
+  getGBathroom(state){
     let self = this;
-    networking.gGet(this.state.id, res => {
+    networking.gGet(state.id, res => {
       console.log(res);
       self.setState({
         bathroom: res,
@@ -31,9 +41,9 @@ class Bathroom extends React.Component {
       });
     });
   }
-  getBathroom(){
+  getBathroom(state){
     let self = this;
-    networking.get(this.state.id, (res) => {
+    networking.get(state.id, (res) => {
       console.log(res);
       self.setState({
         bathroom: res,
@@ -42,21 +52,80 @@ class Bathroom extends React.Component {
     });
   }
 
-  eachReview(i, review){
+  eachReview(review, i){
     return(
       <Review key={i}>{review}</Review>
     );
   }
 
+  upForm(prop, e){
+    console.log();
+    let review = this.state.review;
+    review[prop] = e.target.value;
+    this.setState({
+      review: review
+    });
+  }
+  submitReview(){
+    let data = {
+      text: this.state.review.text,
+      rating: $('#rating').rating('get rating')
+    };
+    let self = this;
+    revNetworking.post(this.state.id, data, (res) => {
+      let bathroom = self.state.bathroom;
+      console.log(bathroom);
+      bathroom.reviews.push(res);
+      console.log(bathroom);
+      self.setState({
+        bathroom: bathroom
+      });
+      console.log(res);
+    });
+  }
   render(){
     return(
       <div>
         {this.state.loading ? this.renderLoader() : this.renderState()}
+        <div className="ui basic modal">
+        <div className="ui icon header">
+          <i className="edit icon"></i>
+          Make a Review
+        </div>
+        <div className="content">
+          <form className="ui form">
+            <div className="field">
+              <p>Review</p>
+              <input type="text" onChange={(e)=>this.upForm("text", e)}/>
+            </div>
+            <div className="field">
+              <p>Rating</p>
+              <div id="rating"
+                className="ui star rating" data-rating="3" data-max-rating="5"
+                onChange={(e)=>this.upForm("rating", e)}
+              />
+            </div>
+          </form>
+        </div>
+        <div className="actions">
+          <div className="ui red basic cancel inverted button">
+            <i className="remove icon"></i> Cancel
+          </div>
+          <div onClick={()=>this.submitReview()} className="ui green ok inverted button">
+            <i className="checkmark icon"></i> Submit
+          </div>
+        </div>
       </div>
+    </div>
     );
   }
   renderLoader(){
     return <div>Loading...</div>;
+  }
+  makeReview(){
+    $('.ui.basic.modal')
+      .modal('show')
+    ;
   }
 
   renderState(){
@@ -72,11 +141,16 @@ class Bathroom extends React.Component {
                   <div className="ui card">
                     <div className="content">
                       <div className="header">Location</div>
-                      TODO
+                      {b.location.formatted}
                     </div>
                     <div className="content">
                       <div className="header">Rating</div>
-                      TODO
+                      {
+                        b.rating && b.rating.count > 0 ?
+                        <div id="main-rating" className="ui rating" data-max-rating="5" data-rating={b.rating.value}></div>
+                        :
+                        <div>Not yet Rated</div>
+                      }
                     </div>
                   </div>
                   <div className="ui horizontal divider"><i className="location arrow icon"></i></div>
@@ -93,18 +167,15 @@ class Bathroom extends React.Component {
                       <div className="ui header">Reviews</div>
                     </div>
                     <div className="right floated column">
-                      <div className="ui basic button">Add a Review</div>
+                      <div onClick={()=>this.makeReview()} className="ui basic button">Add a Review</div>
                     </div>
                   </div>
                 </div>
                 
-                
-                
-
                 <div className="ui segment">
                   {b.reviews.length === 0 ? 
                     <div>No reviews yet</div> : 
-                    b.reviews.map((i, r)=>this.eachReview(i,r))
+                    b.reviews.map((r, i)=>this.eachReview(r, i))
                   }
                 </div>
               </div>
@@ -128,16 +199,24 @@ class Bathroom extends React.Component {
       );
     }
   }
+
+
   verifyCurrent() {
     let curr = this.state.bathroom;
     let coords = curr.geometry.location;
     coords = [coords.lat, coords.lng];
+    let self = this;
     networking.add({coords: coords, location: {buildingName: curr.name}, gId: curr.place_id}, bathroom => {
       bathroom.verified = true;
       console.log(bathroom);
-      this.setState({
-        bathroom: bathroom
+      self.setState({
+        bathroom: bathroom,
+        verified: true,
+        id: bathroom._id
       });
+      console.log("Going to /b/"+bathroom._id);
+      self.props.history.push('/b/'+bathroom._id);
+      
     });
   }
 }
