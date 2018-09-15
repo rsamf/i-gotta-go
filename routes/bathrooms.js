@@ -46,11 +46,11 @@ router.get('/', (req, res, next) => {
         response.on('end', () => {
           count++;
           let final = JSON.parse(raw);
-          console.log(JSON.parse(raw));
+          console.log(final);
           respondWithBathrooms(final);
         });
       }).on('error', e => {
-        console.log("E", e);
+        console.log("ERROR", e);
         error(e, res, "address error");
       });
     });
