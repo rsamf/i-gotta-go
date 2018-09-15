@@ -33,6 +33,7 @@ router.get('/', (req, res, next) => {
     `${globals.URL.Places}?location=${req.query.lat},${req.query.lng}&key=${globals.Key.Google.API}`;
     url+="&opennow=true";
     url+="&rankby=distance";
+    console.log(url);
     let count = 0;
     TYPES.forEach(t => {
       let newURL = url+"&type="+t;
@@ -44,7 +45,9 @@ router.get('/', (req, res, next) => {
         });
         response.on('end', () => {
           count++;
-          respondWithBathrooms(JSON.parse(raw));
+          let final = JSON.parse(raw);
+          console.log(JSON.parse(raw));
+          respondWithBathrooms(final);
         });
       }).on('error', e => {
         error(e, res, "address error");
