@@ -50,6 +50,7 @@ router.get('/', (req, res, next) => {
           respondWithBathrooms(final);
         });
       }).on('error', e => {
+        console.log("E", e);
         error(e, res, "address error");
       });
     });
